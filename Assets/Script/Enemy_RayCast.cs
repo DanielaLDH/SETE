@@ -13,6 +13,7 @@ public class Enemy_RayCast : MonoBehaviour
     public float speed;
 
     private Rigidbody2D rig;
+    private Player player;
 
     private bool isDead;
     private bool isFront;
@@ -22,6 +23,10 @@ public class Enemy_RayCast : MonoBehaviour
     void Start()
     {
         rig = GetComponent<Rigidbody2D>();
+
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+
+
         //anim = GetComponent<Animator>();
 
         if (!isRight)
@@ -51,13 +56,15 @@ public class Enemy_RayCast : MonoBehaviour
 
             if (isRight)
             {
-                transform.eulerAngles = new Vector2(0, 0);
+                Debug.Log(isRight);
+                transform.eulerAngles = new Vector2(0, 180);
                 direction = Vector2.right;
                 rig.velocity = new Vector2(speed, rig.velocity.y);
             }
             else
             {
-                transform.eulerAngles = new Vector2(0, 180);
+                Debug.Log(isRight);
+                transform.eulerAngles = new Vector2(0, 0);
                 direction = Vector2.left;
                 rig.velocity = new Vector2(-speed, rig.velocity.y);
             }
@@ -110,5 +117,15 @@ public class Enemy_RayCast : MonoBehaviour
     {
         Gizmos.DrawRay(pointf.position, direction * maxVision);
         Gizmos.DrawRay(pointb.position, -direction * maxVision);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+        if (collision.CompareTag("Player"))
+        {
+            Debug.Log(collision);
+            player.OnHit(damage);
+        }
     }
 }
